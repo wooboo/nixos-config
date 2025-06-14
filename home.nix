@@ -104,9 +104,4 @@
 
     inputs.zen-browser.packages."${system}".default # beta
   ];
-  programs.zen-browser = {
-    enable = true;
-    nativeMessagingHosts = [pkgs.firefoxpwa];
-    # Add any other native connectors here
-  };
 }
