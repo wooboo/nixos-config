@@ -103,5 +103,7 @@
     usbutils # lsusb
 
     inputs.zen-browser.packages."${system}".default # beta
+
+    prismlauncher
   ];
 }
