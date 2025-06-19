@@ -41,15 +41,19 @@
           }];
       };
     };
+    # homes = {
+    #   "wooboo@smallnix" = home-manager.lib.homeManagerConfiguration {
+    #     inherit pkgs;
+    #     system = system;
 
-    homes = {
-      "wooboo@smallnix" = home-manager.lib.homeManagerConfiguration {
-        modules = [ ./home/wooboo.nix ./home/common.nix ./home/desktop.nix ];
-      };
-      "wooboo@wslnix" = home-manager.lib.homeManagerConfiguration {
-        modules = [ ./home/wooboo.nix ./home/common.nix ./home/wsl.nix ];
-      };
-    };
+    #     modules = [ ./home/wooboo.nix ./home/common.nix ./home/desktop.nix ];
+    #   };
+    #   "wooboo@wslnix" = home-manager.lib.homeManagerConfiguration {
+    #     inherit pkgs;
+    #     system = system;
+    #     modules = [ ./home/wooboo.nix ./home/common.nix ./home/wsl.nix ];
+    #   };
+    # };
   in
   {
     nixosConfigurations = hosts;
