@@ -4,8 +4,8 @@
     enable = true;
     enableCompletion = true;
     shellAliases = {
-      nrs = "sudo nixos-rebuild switch";
-      nrsf = "sudo nixos-rebuild switch --flake .";
+      nrs = "sudo nixos-rebuild switch --flake ~/nixos-config";
+      hms = "home-manager switch --flake ~/nixos-config";
       cat = "bat";
     };
   };
@@ -23,14 +23,16 @@
   };
 
   home.packages = with pkgs; [
-    neovim
-    bat
+    neovim # A modern text editor based on Vim
+    bat # A cat clone with wings
 
-    # here is some command line tools I use frequently
-    # feel free to add your own or remove some of them
+    lazygit # A git wrapper that makes it easier to work with git in the terminal
 
-    neofetch
+    fastfetch # A fast, cross-platform system information tool written in Rust
+
     nnn # terminal file manager
+    mc # Midnight Commander, a visual file manager
+    yazi # A terminal file manager written in Rust, inspired by ranger
 
     # archives
     zip
@@ -44,11 +46,10 @@
     yq-go # yaml processor https://github.com/mikefarah/yq
     eza # A modern replacement for ‘ls’
     fzf # A command-line fuzzy finder
-    yazi
 
     # networking tools
     mtr # A network diagnostic tool
-    iperf3
+    iperf3 # A tool for active measurements of the maximum achievable bandwidth on IP networks
     dnsutils # `dig` + `nslookup`
     ldns # replacement of `dig`, it provide the command `drill`
     aria2 # A lightweight multi-protocol & multi-source command-line download utility
@@ -58,9 +59,9 @@
 
     # misc
     cowsay
-    file
-    which
-    tree
+    file 
+    which 
+    tree 
     gnused
     gnutar
     gawk
@@ -72,6 +73,7 @@
     # it provides the command `nom` works just like `nix`
     # with more details log output
     nix-output-monitor
+    home-manager
 
     # productivity
     # hugo # static site generator

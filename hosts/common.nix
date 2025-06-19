@@ -53,7 +53,6 @@
     curl
     git
     vim
-    home-manager
   ];
 
   system.stateVersion = "25.05";
