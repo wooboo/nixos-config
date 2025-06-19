@@ -7,7 +7,7 @@
     userName = "Piotr Żabówka";
     userEmail = "wooboox@gmail.com";
     extraConfig = {
-        init.defaultBranch = "main";
+      init.defaultBranch = "main";
     };
   };
 

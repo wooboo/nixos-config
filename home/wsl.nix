@@ -1,5 +1,5 @@
 { config, pkgs, ... }:
 {
-  home.packages = [  ];
+  home.packages = [ ];
   # No GPG agent here
 }

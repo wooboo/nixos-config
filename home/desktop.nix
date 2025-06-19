@@ -1,8 +1,8 @@
 { config, pkgs, ... }:
 {
-  home.packages =  with pkgs;[ 
-    firefox 
-    vscode 
+  home.packages = with pkgs; [
+    firefox
+    vscode
     ghostty
     vscode
   ];

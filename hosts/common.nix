@@ -1,9 +1,17 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   users.users.wooboo = {
     isNormalUser = true;
     description = "Piotr";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+    ];
   };
 
   nix.gc = {
@@ -12,7 +20,10 @@
     options = "--delete-older-than 1w";
   };
   nix.settings.auto-optimise-store = true;
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
   nixpkgs.config.allowUnfree = true;
 
   # Set your time zone.
@@ -33,7 +44,7 @@
     LC_TIME = "pl_PL.UTF-8";
   };
   console.keyMap = "pl2";
-  
+
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
@@ -44,6 +55,6 @@
     vim
     home-manager
   ];
-  
+
   system.stateVersion = "25.05";
 }
