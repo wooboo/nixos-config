@@ -38,7 +38,6 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.sharedModules = [
-                ./home/wooboo.nix
                 ./home/common.nix
                 ./home/desktop.nix
               ];
@@ -58,7 +57,6 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.sharedModules = [
-                ./home/wooboo.nix
                 ./home/common.nix
                 ./home/wsl.nix
               ];
