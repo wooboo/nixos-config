@@ -19,11 +19,12 @@
           ./hosts/common.nix
           ./hosts/desktop.nix
           home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.wooboo = import ./home/wooboo.nix;
-            } ];
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.sharedModules = [ ./home/wooboo.nix ./home/common.nix ./home/desktop.nix ];
+            home-manager.users.wooboo = import ./home/wooboo.nix;
+          }];
       };
       wslnix = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -35,6 +36,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.sharedModules = [ ./home/wooboo.nix ./home/common.nix ./home/wsl.nix ];
             home-manager.users.wooboo = import ./home/wooboo.nix;
           }];
       };
@@ -42,10 +44,10 @@
 
     homes = {
       "wooboo@smallnix" = home-manager.lib.homeManagerConfiguration {
-        modules = [ ./home/common.nix ./home/desktop.nix ];
+        modules = [ ./home/wooboo.nix ./home/common.nix ./home/desktop.nix ];
       };
       "wooboo@wslnix" = home-manager.lib.homeManagerConfiguration {
-        modules = [ ./home/common.nix ./home/wsl.nix ];
+        modules = [ ./home/wooboo.nix ./home/common.nix ./home/wsl.nix ];
       };
     };
   in
