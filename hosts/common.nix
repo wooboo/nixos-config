@@ -5,11 +5,16 @@
     description = "Piotr";
     extraGroups = [ "networkmanager" "wheel" ];
   };
+
   nix.gc = {
     automatic = true;
     dates = "weekly";
     options = "--delete-older-than 1w";
   };
+  nix.settings.auto-optimise-store = true;
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nixpkgs.config.allowUnfree = true;
+
   # Set your time zone.
   time.timeZone = "Europe/Warsaw";
 
@@ -28,14 +33,16 @@
     LC_TIME = "pl_PL.UTF-8";
   };
   console.keyMap = "pl2";
+  
+  # Enable the OpenSSH daemon.
+  services.openssh.enable = true;
 
-  nixpkgs.config.allowUnfree = true;
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  system.stateVersion = "25.05";
   environment.systemPackages = with pkgs; [
     wget
     curl
     git
     vim
   ];
+  
+  system.stateVersion = "25.05";
 }

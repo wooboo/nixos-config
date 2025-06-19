@@ -52,6 +52,5 @@
   {
     nixosConfigurations = hosts;
     homeConfigurations = homes;
-    nix.settings.experimental-features = [ "nix-command" "flakes" ];
   };
 }
