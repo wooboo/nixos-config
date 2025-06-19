@@ -4,7 +4,7 @@
     nixpkgs        = { url = "github:nixos/nixpkgs/nixos-25.05"; };
     nixos-wsl      = { url = "github:nix-community/NixOS-WSL/main"; };
     home-manager   = {
-      url = "github:nix-community/home-manager/release-25.05";
+      url          = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -12,7 +12,11 @@
   outputs = { self, nixpkgs, nixos-wsl, home-manager, ... }:
 
   let
-    hosts = {
+    system = "x86_64-linux";
+    pkgs   = nixpkgs.legacyPackages.${system};
+  in 
+  {
+    nixosConfigurations = {
       smallnix = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux"; # or legacyPackages.${system}.system
         modules = [ 
@@ -41,22 +45,17 @@
           }];
       };
     };
-    # homes = {
-    #   "wooboo@smallnix" = home-manager.lib.homeManagerConfiguration {
-    #     inherit pkgs;
-    #     system = system;
+    homeConfigurations ={
+      "wooboo@smallnix" = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
 
-    #     modules = [ ./home/wooboo.nix ./home/common.nix ./home/desktop.nix ];
-    #   };
-    #   "wooboo@wslnix" = home-manager.lib.homeManagerConfiguration {
-    #     inherit pkgs;
-    #     system = system;
-    #     modules = [ ./home/wooboo.nix ./home/common.nix ./home/wsl.nix ];
-    #   };
-    # };
-  in
-  {
-    nixosConfigurations = hosts;
-    homeConfigurations = homes;
+        modules = [ ./home/wooboo.nix ./home/common.nix ./home/desktop.nix ];
+      };
+      "wooboo@wslnix" = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+
+        modules = [ ./home/wooboo.nix ./home/common.nix ./home/wsl.nix ];
+      };
+    };
   };
 }
