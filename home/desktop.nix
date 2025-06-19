@@ -1,5 +1,10 @@
 { config, pkgs, ... }:
 {
-  home.packages = [ pkgs.firefox pkgs.vscode ];
+  home.packages =  with pkgs;[ 
+    firefox 
+    vscode 
+    ghostty
+    vscode
+  ];
   programs.gpg.agent.enable = true;
 }
