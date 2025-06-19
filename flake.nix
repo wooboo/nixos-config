@@ -1,45 +1,93 @@
 {
-  description = "NixOS configuration";
-
+  description = "Unified NixOS + WSL + Home Manager flake";
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs = {
+      url = "github:nixos/nixpkgs/nixos-25.05";
+    };
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL/main";
+    };
     home-manager = {
       url = "github:nix-community/home-manager/release-25.05";
-      # The `follows` keyword in inputs is used for inheritance.
-      # Here, `inputs.nixpkgs` of home-manager is kept consistent with
-      # the `inputs.nixpkgs` of the current flake,
-      # to avoid problems caused by different versions of nixpkgs.
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
-      # IMPORTANT: we're using "libgbm" and is only available in unstable so ensure
-      # to have it up-to-date or simply don't specify the nixpkgs input  
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   outputs =
-    { nixpkgs, home-manager, zen-browser, ... } @ inputs:
+    {
+      self,
+      nixpkgs,
+      nixos-wsl,
+      home-manager,
+      ...
+    }:
+
+    let
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
     {
       nixosConfigurations = {
         smallnix = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = { inherit inputs; };
+          system = "x86_64-linux"; # or legacyPackages.${system}.system
           modules = [
-            ./configuration.nix
+            ./hosts/common.nix
+            ./hosts/desktop.nix
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
-              home-manager.backupFileExtension = "backup";
               home-manager.useUserPackages = true;
-              home-manager.users.wooboo.imports = [
-                ./home.nix
+              home-manager.sharedModules = [
+                ./home/wooboo.nix
+                ./home/common.nix
+                ./home/desktop.nix
               ];
-              home-manager.extraSpecialArgs = { inherit inputs; system = "x86_64-linux";};
+              home-manager.users.wooboo = import ./home/wooboo.nix;
+            }
+          ];
+        };
+        wslnix = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+
+          modules = [
+            nixos-wsl.nixosModules.default
+            ./hosts/common.nix
+            ./hosts/wsl.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.sharedModules = [
+                ./home/wooboo.nix
+                ./home/common.nix
+                ./home/wsl.nix
+              ];
+              home-manager.users.wooboo = import ./home/wooboo.nix;
             }
           ];
         };
       };
+      homeConfigurations = {
+        "wooboo@smallnix" = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+
+          modules = [
+            ./home/wooboo.nix
+            ./home/common.nix
+            ./home/desktop.nix
+          ];
+        };
+        "wooboo@wslnix" = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+
+          modules = [
+            ./home/wooboo.nix
+            ./home/common.nix
+            ./home/wsl.nix
+          ];
+        };
+      };
+      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
+
     };
 }
