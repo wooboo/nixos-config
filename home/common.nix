@@ -1,5 +1,34 @@
 { config, pkgs, ... }:
 {
+  programs.bash = {
+    enable = true;
+    enableCompletion = true;
+    shellAliases = {
+      nrs = "sudo nixos-rebuild switch";
+      nrsf = "sudo nixos-rebuild switch --flake .";
+      cat = "bat";
+    };
+  };
+  programs.git = {
+    enable = true;
+    userName = "Piotr Żabówka";
+    userEmail = "wooboox@gmail.com";
+    extraConfig = {
+        init.defaultBranch = "main";
+    };
+  };
+  # starship - an customizable prompt for any shell
+  programs.starship = {
+    enable = true;
+    # custom settings
+    settings = {
+      add_newline = false;
+      aws.disabled = true;
+      gcloud.disabled = true;
+      line_break.disabled = true;
+    };
+  };
+
   home.stateVersion = "25.05";
   home.packages = with pkgs; [ 
     neovim
@@ -72,6 +101,4 @@
     pciutils # lspci
     usbutils # lsusb
   ];
-  programs.zsh.enable = true;
-  programs.git.enable = true;
 }
