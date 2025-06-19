@@ -26,12 +26,17 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.sharedModules = [ ./home/wooboo.nix ./home/common.nix ./home/desktop.nix ];
+            home-manager.sharedModules = [ 
+              ./home/wooboo.nix 
+              ./home/common.nix 
+              ./home/desktop.nix 
+            ];
             home-manager.users.wooboo = import ./home/wooboo.nix;
           }];
       };
       wslnix = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+      
         modules = [ 
           nixos-wsl.nixosModules.default
           ./hosts/common.nix
@@ -40,7 +45,11 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.sharedModules = [ ./home/wooboo.nix ./home/common.nix ./home/wsl.nix ];
+            home-manager.sharedModules = [ 
+              ./home/wooboo.nix 
+              ./home/common.nix 
+              ./home/wsl.nix 
+            ];
             home-manager.users.wooboo = import ./home/wooboo.nix;
           }];
       };
@@ -57,5 +66,7 @@
         modules = [ ./home/wooboo.nix ./home/common.nix ./home/wsl.nix ];
       };
     };
+      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
+
   };
 }
