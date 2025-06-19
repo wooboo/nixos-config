@@ -9,14 +9,7 @@
       cat = "bat";
     };
   };
-  programs.git = {
-    enable = true;
-    userName = "Piotr Żabówka";
-    userEmail = "wooboox@gmail.com";
-    extraConfig = {
-        init.defaultBranch = "main";
-    };
-  };
+
   # starship - an customizable prompt for any shell
   programs.starship = {
     enable = true;
@@ -29,7 +22,6 @@
     };
   };
 
-  home.stateVersion = "25.05";
   home.packages = with pkgs; [ 
     neovim
     bat
@@ -101,4 +93,6 @@
     pciutils # lspci
     usbutils # lsusb
   ];
+  
+  home.stateVersion = "25.05";
 }

@@ -22,7 +22,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.wooboo = import ./home/common.nix;
+              home-manager.users.wooboo = import ./home/wooboo.nix;
             } ];
       };
       wslnix = nixpkgs.lib.nixosSystem {
@@ -35,7 +35,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.wooboo = import ./home/common.nix;
+            home-manager.users.wooboo = import ./home/wooboo.nix;
           }];
       };
     };
