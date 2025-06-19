@@ -83,7 +83,7 @@
     nix-output-monitor
 
     # productivity
-    hugo # static site generator
+    # hugo # static site generator
     glow # markdown previewer in terminal
 
     btop  # replacement of htop/nmon
@@ -102,7 +102,7 @@
     pciutils # lspci
     usbutils # lsusb
 
-    inputs.zen-browser.packages."${system}".default # beta
+    # inputs.zen-browser.packages."${system}".default # beta
 
     prismlauncher
   ];

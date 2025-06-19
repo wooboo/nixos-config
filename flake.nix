@@ -1,45 +1,56 @@
 {
-  description = "NixOS configuration";
-
+  description = "Unified NixOS + WSL + Home Manager flake";
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
-    home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
-      # The `follows` keyword in inputs is used for inheritance.
-      # Here, `inputs.nixpkgs` of home-manager is kept consistent with
-      # the `inputs.nixpkgs` of the current flake,
-      # to avoid problems caused by different versions of nixpkgs.
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
-      # IMPORTANT: we're using "libgbm" and is only available in unstable so ensure
-      # to have it up-to-date or simply don't specify the nixpkgs input  
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nixpkgs        = { url = "github:NixOS/nixpkgs/nixos-unstable"; };
+    nixos-wsl      = { url = "github:nix-community/NixOS-WSL/main"; };
+    home-manager   = { url = "github:nix-community/home-manager/release-23.05";
+                       inputs.nixpkgs.follows = "nixpkgs"; };
+    flake-utils    = { url = "github:numtide/flake-utils"; };
   };
 
-  outputs =
-    { nixpkgs, home-manager, zen-browser, ... } @ inputs:
-    {
-      nixosConfigurations = {
-        smallnix = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = { inherit inputs; };
-          modules = [
-            ./configuration.nix
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.backupFileExtension = "backup";
-              home-manager.useUserPackages = true;
-              home-manager.users.wooboo.imports = [
-                ./home.nix
-              ];
-              home-manager.extraSpecialArgs = { inherit inputs; system = "x86_64-linux";};
-            }
-          ];
+  outputs = inputs@{ self, nixpkgs, nixos-wsl, home-manager, flake-utils, ... }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let pkgs = import nixpkgs { inherit system; };
+      in {
+        nixosConfigurations = {
+          smallnix = pkgs.lib.nixosSystem {
+            system = system;
+            modules = [
+              ./hosts/common.nix
+              ./hosts/desktop.nix
+              home-manager.nixosModules.home-manager
+              {
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                home-manager.users.wooboo = import ./home/common.nix;
+              }
+            ];
+          };
+          wslnix = pkgs.lib.nixosSystem {
+            system = system;
+            modules = [
+              nixos-wsl.nixosModules.default
+              ./hosts/common.nix
+              ./hosts/wsl.nix
+              home-manager.nixosModules.home-manager
+              {
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                home-manager.users.wooboo = import ./home/common.nix;
+              }
+            ];
+          };
         };
-      };
-    };
+
+        homeConfigurations = {
+          "wooboo@smallnix" = home-manager.lib.homeManagerConfiguration {
+            inherit pkgs system;
+            modules = [ ./home/common.nix ./home/desktop.nix ];
+          };
+          "wooboo@wslnix" = home-manager.lib.homeManagerConfiguration {
+            inherit pkgs system;
+            modules = [ ./home/common.nix ./home/wsl.nix ];
+          };
+        };
+      });
 }
