@@ -11,14 +11,18 @@
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    vscode-server = {
+      url = "github:nix-community/nixos-vscode-server";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
     {
-      self,
       nixpkgs,
       nixos-wsl,
       home-manager,
+      vscode-server,
       ...
     }:
 
@@ -33,8 +37,10 @@
           modules = [
             ./hosts/common.nix
             ./hosts/desktop.nix
+            vscode-server.nixosModules.default
             home-manager.nixosModules.home-manager
             {
+              services.vscode-server.enable = true;
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.sharedModules = [
@@ -52,8 +58,10 @@
             nixos-wsl.nixosModules.default
             ./hosts/common.nix
             ./hosts/wsl.nix
+            vscode-server.nixosModules.default
             home-manager.nixosModules.home-manager
             {
+              services.vscode-server.enable = true;
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.sharedModules = [

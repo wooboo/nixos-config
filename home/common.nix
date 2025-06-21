@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 {
   programs.bash = {
     enable = true;
@@ -8,6 +8,13 @@
       hms = "home-manager switch --flake ~/nixos-config";
       cat = "bat";
     };
+  };
+
+  # Enable direnv for automatic environment loading
+  programs.direnv = {
+    enable = true;
+    enableBashIntegration = true;
+    nix-direnv.enable = true;
   };
 
   # starship - an customizable prompt for any shell
@@ -74,6 +81,9 @@
     # with more details log output
     nix-output-monitor
     home-manager
+    nixfmt-rfc-style # Nix code formatter
+    nil # Nix Language Server
+    direnv # Automatic environment loading
 
     # productivity
     # hugo # static site generator
